@@ -3,9 +3,8 @@ TAXOMIAS v0.1 August, '16
 
 author:      Carl-Eric Wegner
 affiliation: Küsel Lab - Aquatic Geomicrobiology
-              Friedrich Schiller University of Jena
-
-              carl-eric.wegner@uni-jena.de
+	     Friedrich Schiller University of Jena
+             carl-eric.wegner(at)uni-jena.de
 
 The idea behind TAXOMIAS is to locally setup a tailored NCBI taxonomy database
  and to provide wrappers to utilize this database for common tasks such as:
