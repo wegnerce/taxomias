@@ -34,7 +34,7 @@ system of using accession (version) numbers as replacement.
 
 import os, sqlite3
 
-db = "/home/calle/Storage/ncbi_taxonomy.db"
+db = "ncbi_taxonomy.db"
 unknown = -1
 no_rank = "no rank"
 
