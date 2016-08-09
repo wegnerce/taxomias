@@ -84,10 +84,11 @@ NOTE: The import of the remaning resources takes again a while.
   
   ``` shell
   sqlite ncbi_taxonomy.db
-  SELECT taxid FROM tree WHERE name = "Acidobacterium capsulatum":
+  SELECT taxid FROM tree WHERE name = "Acidobacterium capsulatum";
+  .exit
   ```
   
-  The prompt will return 33075, which is the unique taxonomic identifiier for _Acidobacterium capsulatum_. Taxomias contains a bunch of functions which allows us to easily access our locally stored taxonomy database and to process taxonomic information with respect to setup cross references.
+  The prompt will return 33075, which is the unique taxonomic identifiier for _Acidobacterium capsulatum_. Taxomias contains a bunch of functions which allows us to easily access our locally stored taxonomy database and to process taxonomic information with respect to setup cross references, see __Implemented functions__ and __Examples__ for details.
   
 ## Implemented functions
 
