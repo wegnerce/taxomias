@@ -55,29 +55,29 @@ three NCBI resources:
   taxdmp.zip contains a bunch of files, we only need two of them: paths.dmp and nodes.dmp, which hold the whole NCBI taxonomy. prot.accession2taxid.gz includes accession version number mappings for all protein sequences deposited in NCBI nr, and assembly_summary_refseq.txt is a list of all deposited and annotated genomes in NCBI including respective taxonomic identifiiers.
 
 3. The heart of taxomias will be a cross-mapped NCBI taxonomy database stored in a sqlite3 database.
-To setup our database execute the following commands on the command-line. 
-NOTE: The import of the accession version number mappings takes a while - be patient.
+   To setup our database execute the following commands on the command-line. 
+   NOTE: The import of the accession version number mappings takes a while - be patient.
 
-``` shell
-sqlite3 ncbi_taxonomy.db
-create table acc_taxid (accession text, accession_version text, taxid integer, gi integer);
-.tables
-.mode list
-.import prot.accession2taxid acc_taxid
-CREATE UNIQUE INDEX accvers_idx_on_accvers_taxid ON acc_taxid(accession_version);
-CREATE INDEX taxid_idx_on_accvers_taxid ON acc_taxid(taxid);
-```
+  ``` shell
+  sqlite3 ncbi_taxonomy.db
+  create table acc_taxid (accession text, accession_version text, taxid integer, gi integer);
+  .tables
+  .mode list
+  .import prot.accession2taxid acc_taxid 
+  CREATE UNIQUE INDEX accvers_idx_on_accvers_taxid ON acc_taxid(accession_version);
+  CREATE INDEX taxid_idx_on_accvers_taxid ON acc_taxid(taxid);
+  ```
 
   With these commands we have created a new sqlite3 database object (ncbi_taxonomy.db), a table (acc_taxid) 
   within this object, we have imported the protein sequence to accession version number mappings into acc_taxid and we created
   indices to improve the performance of the sqlite3 database.
 
-4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiiers to available genomes. To set up this two components of taxomias we will use the ``` setup_taxomias.py ``` and call it as follows:
+4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiiers to available      genomes. To set up this two components of taxomias we will use the ``` setup_taxomias.py ``` and call it as follows:
 NOTE: The import of the remaning resources takes again a while.
 
-``` shell
-python setup_taxomias.py names.dmp nodes.dmp assembly_summary_refseq.txt ncbi_taxonomy.db
-```
+  ``` shell
+  python setup_taxomias.py names.dmp nodes.dmp assembly_summary_refseq.txt ncbi_taxonomy.db
+  ```
   After this step our NCBI taxonomy database contains three tables: acc_taxid (mappings of accession version numbers and taxonomic identifiiers for all proteins deposited in NCBI nr), tree (the whole NCBI taxonomy as hierarchical table) and genomes (mappings of taxonomic identifiiers to availabl refseq genomes). With that our database is ready to be used. To check its integrity we do a little example:
   
   ``` shell
