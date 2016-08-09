@@ -34,7 +34,9 @@ three NCBI resources:
 
 ## Installation (Linux-based systems)
 
-1. Pre-requisites:
+1. Download Taxomias: ``` git clone https://github.com/wegnerce/taxomias.git ```
+
+  Pre-requisites:
   * approx. 25 GB of disk space (preferentially on a fast drive)
   * needed python package: sqlite3 
   
@@ -55,7 +57,7 @@ three NCBI resources:
   taxdmp.zip contains a bunch of files, we only need two of them: paths.dmp and nodes.dmp, which hold the whole NCBI taxonomy. prot.accession2taxid.gz includes accession version number mappings for all protein sequences deposited in NCBI nr, and assembly_summary_refseq.txt is a list of all deposited and annotated genomes in NCBI including respective taxonomic identifiiers.
 
 3. The heart of taxomias will be a cross-mapped NCBI taxonomy database stored in a sqlite3 database.
-   To setup our database execute the following commands on the command-line. 
+   To setup our database execute the following commands on the command-line. Taxomias expects the NCBI taxonomy to be in the same directory.
    NOTE: The import of the accession version number mappings takes a while - be patient.
 
   ``` shell
@@ -78,7 +80,7 @@ NOTE: The import of the remaning resources takes again a while.
   ``` shell
   python setup_taxomias.py names.dmp nodes.dmp assembly_summary_refseq.txt ncbi_taxonomy.db
   ```
-  After this step our NCBI taxonomy database contains three tables: acc_taxid (mappings of accession version numbers and taxonomic identifiiers for all proteins deposited in NCBI nr), tree (the whole NCBI taxonomy as hierarchical table) and genomes (mappings of taxonomic identifiiers to availabl refseq genomes). With that our database is ready to be used. To check its integrity we do a little example:
+  After this step our NCBI taxonomy database contains three tables: acc_taxid (mappings of accession version numbers and taxonomic identifiiers for all proteins deposited in NCBI nr), tree (the whole NCBI taxonomy as hierarchical table) and genomes (mappings of taxonomic identifiiers to availabl refseq genomes). The previously imported files are not longer necessary and can be deleted to save disk space. With that our database is ready to be used. To check its integrity we do a little example:
   
   ``` shell
   sqlite ncbi_taxonomy.db
