@@ -37,8 +37,8 @@ three NCBI resources:
 1. Download Taxomias: ``` git clone https://github.com/wegnerce/taxomias.git ```
 
   Pre-requisites:
-  * approx. 25 GB of disk space (preferentially on a fast drive)
-  * needed python package: sqlite3 
+  * approx. __25 GB__ of disk space (preferentially on a fast drive)
+  * needed python package: __sqlite3__ 
   
   Python packages are installed easily using ```pip```. Under Debian-based (e.g. Ubuntu, Debian, Mint) and Red Hat-based (e.g. Red Hat, Centos) systems, ``` pip ``` is availbale from public repositories: ```apt-get install python-pip ``` (Debian-based systems) ``` yum -y install python-pip ``` (Red Hat-based systems).
 
@@ -54,11 +54,11 @@ three NCBI resources:
   * ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.gz
   * ftp://ftp.ncbi.nih.gov/genomes/ASSEMBLY_REPORTS/assembly_summary_refseq.txt
 
-  taxdmp.zip contains a bunch of files, we only need two of them: paths.dmp and nodes.dmp, which hold the whole NCBI taxonomy. prot.accession2taxid.gz includes accession version number mappings for all protein sequences deposited in NCBI nr, and assembly_summary_refseq.txt is a list of all deposited and annotated genomes in NCBI including respective taxonomic identifiiers.
+  taxdmp.zip contains a bunch of files, we only need two of them: __paths.dmp__ and __nodes.dmp__, which hold the whole NCBI taxonomy. __prot.accession2taxid.gz__ includes accession version number mappings for all protein sequences deposited in NCBI nr, and __assembly_summary_refseq.txt__ is a list of all deposited and annotated genomes in NCBI including respective taxonomic identifiiers.
 
 3. The heart of taxomias will be a cross-mapped NCBI taxonomy database stored in a sqlite3 database.
    To setup our database execute the following commands on the command-line. Taxomias expects the NCBI taxonomy to be in the same directory.
-   NOTE: The import of the accession version number mappings takes a while - be patient.
+   __NOTE:__ The import of the accession version number mappings takes a while - be patient.
 
   ``` shell
   sqlite3 ncbi_taxonomy.db
@@ -75,12 +75,12 @@ three NCBI resources:
   indices to improve the performance of the sqlite3 database.
 
 4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiiers to available      genomes. To set up this two components of taxomias we will use the ``` setup_taxomias.py ``` and call it as follows:
-NOTE: The import of the remaning resources takes again a while.
+__NOTE:__ The import of the remaning resources takes again a while.
 
   ``` shell
   python setup_taxomias.py names.dmp nodes.dmp assembly_summary_refseq.txt ncbi_taxonomy.db
   ```
-  After this step our NCBI taxonomy database contains three tables: acc_taxid (mappings of accession version numbers and taxonomic identifiiers for all proteins deposited in NCBI nr), tree (the whole NCBI taxonomy as hierarchical table) and genomes (mappings of taxonomic identifiiers to availabl refseq genomes). The previously imported files are not longer necessary and can be deleted to save disk space. With that our database is ready to be used. To check its integrity we do a little example:
+  After this step our NCBI taxonomy database contains three tables: __acc_taxid (mappings of accession version numbers and taxonomic identifiiers for all proteins deposited in NCBI nr)__, __tree (the whole NCBI taxonomy as hierarchical table)__ and __genomes (mappings of taxonomic identifiiers to availabl refseq genomes)__. The previously imported files are not longer necessary and can be deleted to save disk space. With that our database is ready to be used. To check its integrity we do a little example:
   
   ``` shell
   sqlite ncbi_taxonomy.db
