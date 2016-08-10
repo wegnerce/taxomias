@@ -174,6 +174,36 @@ __NOTE:__ Again, the import takes a bit of time.
     e.g. ``` taxomias.AllGenomesByTaxid(33075, "prot") ```
     --> the function will download all genomes of given taxonomic group (e.g. a family or order) using the function ```taxomias.GenomeByTaxid``
 
+## Examples
+
+### Example (1) - Collecting and downloading all Verrucomicrobia genomes
+
+``` python
+# needed modules
+import sqlite3, taxmomias
+
+#Whats the taxonomic idnetifiier of Verrucomicrobia?
+print taxomias.TaxidByName("Verrucomicrobia")
+
+#Ah, apparently its 74201, so lets collect all the genomes (protein sequences)
+taxomias.AllGenomesByTaxid(74201)
+
+#That's it, we just collected all available Verrucomicrobia genomes, with three lines of code... ;-)
+```
+
+### Example (2) - Filter NCBI nr for archaeal proteins
+
+1. First we need to grab the latest NCBI nr database as .fasta
+
+``` wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/nr.gz ```
+
+``` python
+# needed modules
+import sqlite3, taxomias
+from Bio import SeqIO
+
+
+
   
 ## Credits
 The original idea was conceptualized by Sixing Huang (DSMZ, Braunschweig) and most of the original code was written by him. However, NCBI is phasing out GI numbers as identifiiers and links to taxonomic information. 
