@@ -13,15 +13,15 @@ NCBI maintains a well-curated, hierarchical database of known taxonomy. Having
 a local copy of this database in combination with mappings to sequence data deposited
 in NCBI comes in quite handy in many situations (see usage scenarios).
 
-The idea behind TAXOMIAS is to locally setup a tailored NCBI taxonomy database
-in form of an sqlite database and to provide wrappers to use taxonomic information
-to access sequence information. Currently taxomias comprises functions to access
-two NCBI resources:
+Taxomias is a small module written in python.The idea behind TAXOMIAS is to locally 
+setup a tailored NCBI taxonomy database in form of an sqlite database and to provide 
+wrappers to use taxonomic information to access sequence information. Currently taxomias 
+comprises functions to access two NCBI resources:
 
 1. RefSeq genomes
   * mapping of taxonomic identifiiers to available refseq genomes
 2. NCBI nr 
-  * mapping of taxonomic identifiiers to accession version numbers of protein deposited in NCBI nr
+  * mapping of taxonomic identifiiers to accession version numbers of protein sequences deposited in NCBI nr
 
 ## Usage scenarios
 
@@ -76,7 +76,7 @@ two NCBI resources:
   within this object, we have imported the protein sequence to accession version number mappings into acc_taxid and we created
   indices to improve the performance of the sqlite3 database.
 
-4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiiers to available      genomes. To set up these two components of taxomias we will use the ``` setup_taxomias.py ``` and call it as follows:
+4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiiers to available      genomes. To set up these two components of taxomias we will use the ``` setup_taxomias.py ``` script and call it as follows:
 __NOTE:__ Again, the import takes a bit of time.
 
   ``` shell
@@ -182,27 +182,54 @@ __NOTE:__ Again, the import takes a bit of time.
 # needed modules
 import sqlite3, taxmomias
 
-#Whats the taxonomic idnetifiier of Verrucomicrobia?
+# Whats the taxonomic idnetifiier of Verrucomicrobia?
 print taxomias.TaxidByName("Verrucomicrobia")
 
-#Ah, apparently its 74201, so lets collect all the genomes (protein sequences)
+# Ah, apparently its 74201, so lets collect all the genomes (protein sequences)
 taxomias.AllGenomesByTaxid(74201)
 
-#That's it, we just collected all available Verrucomicrobia genomes, with three lines of code... ;-)
+# That's it, we just collected all available Verrucomicrobia genomes, with three lines of code... ;-)
 ```
 
 ### Example (2) - Filter NCBI nr for archaeal proteins
 
-1. First we need to grab the latest NCBI nr database as .fasta
+1. First we need to grab the latest NCBI nr database as .fasta. Download the file and unpack it
 
-``` wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/nr.gz ```
+``` shell
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/nr.gz 
+gzip -d nr.gz
+```
 
 ``` python
 # needed modules
 import sqlite3, taxomias
 from Bio import SeqIO
 
+# define in- and output files
+input_file = "nr.fasta"
+output_file = "nr_archaea.fasta"
 
+# what is the taxonomic identifiier for archaea? it's 2157!
+print taxomias.TaxidByName("Archaea")
+
+# write all accession version numbers belonging to archaea into a set,
+# sets are faster than lists due to the use of hash tables as underlying
+# data structure
+wanted = set(taxomias.AllAccByTaxid(2157))
+
+# filter NCBI nr using the set of archaea accession version numbers
+# for the filtering the fasta file is read and the ID's of every entry are checked
+# for archaeal accessions, every entry looks roughly as follows:
+# >gi|2340931|emb|CAA74950.1| hypothetical protein [Methanosarcina mazei]
+# MQAFYNLNISHVHVPDKDFNRSTFYSIIGAEFFADPAAFAFKQVYLVRDAVFLADCFMWA
+# the accession versiom number is the last part of the id (>gi|2340931|emb|CAA74950.1|),
+# in this case: CAA74950.1
+records = (r for r in SeqIO.parse(input_file, "fasta") if r.id.split("|")[3] in wanted)
+count = SeqIO.write(records, output_file, "fasta")
+print "Saved %i records from %s to %s" % (count, input_file, output_file)
+
+# that's it, again only few lines of code are needed
+```
 
   
 ## Credits
