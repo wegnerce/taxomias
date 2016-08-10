@@ -94,7 +94,7 @@ __NOTE:__ Again, the import takes a bit of time.
   
 ## Implemented functions
   
-  Before we start with having a look at implemented functions we want to tell ``` python ``` where taxomias can be found. In order to do so we create a symbolic link:
+  Before we start with having a look at implemented functions we want to tell ``` python ``` where taxomias can be found. In order to do so we create a symbolic link of the folder containing taxomias.py to a location known to your ```$PYTHONPATH``` variable:
   
   ``` shell
   ln -s /your/path/to/taxomias /usr/lib/python2.7/
@@ -233,7 +233,6 @@ print "Saved %i records from %s to %s" % (count, input_file, output_file)
 
   
 ## Credits
-The original idea was conceptualized by Sixing Huang (DSMZ, Braunschweig) and most of the original code was written by him. However, NCBI is phasing out GI numbers as identifiiers and links to taxonomic information. 
+The original idea was conceptualized by Sixing Huang (DSMZ, Braunschweig) and most of the original code was written by him. In the beginning of 2016 NCBI decided to phase out GI numbers. I used to Sixing's code a lot and decided to modify it to make it work with NCBI's new system of taxonomy mappings based on accession version numbers.
 
-Therefore the original code was rewritten by me to work with the newly established system of using accession (version) numbers as replacement for GI numbers.
-
+In addition I added functions to easily access refseq genomes based on taxonomic information.
