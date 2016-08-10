@@ -13,9 +13,9 @@ NCBI maintains a well-curated, hierarchical database of known taxonomy. Having
 a local copy of this database in combination with mappings to sequence data deposited
 in NCBI comes in quite handy in many situations (see usage scenarios).
 
-Taxomias is a small module written in python.The idea behind TAXOMIAS is to locally 
+TAXOMIAS is a small module written in python.The idea behind TAXOMIAS is to locally 
 setup a tailored NCBI taxonomy database in form of an sqlite database and to provide 
-wrappers to use taxonomic information to access sequence information. Currently taxomias 
+wrappers to use taxonomic information to access sequence information. Currently TAXOMIAS 
 comprises functions to access two NCBI resources:
 
 1. RefSeq genomes
@@ -58,7 +58,7 @@ comprises functions to access two NCBI resources:
 
   taxdmp.zip contains a bunch of files, we only need two of them: __paths.dmp__ and __nodes.dmp__, which hold the whole NCBI taxonomy. __prot.accession2taxid.gz__ includes accession version number mappings for all protein sequences deposited in NCBI nr, and __assembly_summary_refseq.txt__ is a list of all deposited and annotated genomes in NCBI including respective taxonomic identifiiers.
 
-3. The heart of taxomias will be a cross-mapped NCBI taxonomy database stored in a sqlite3 database.
+3. The heart of TAXOMIAS will be a cross-mapped NCBI taxonomy database stored in a sqlite3 database.
    To setup our database execute the following commands on the command-line. Taxomias expects the NCBI taxonomy to be in the same directory.
    __NOTE:__ The import of the accession version number mappings takes a while - be patient.
 
@@ -76,7 +76,7 @@ comprises functions to access two NCBI resources:
   within this object, we have imported the protein sequence to accession version number mappings into acc_taxid and we created
   indices to improve the performance of the sqlite3 database.
 
-4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiiers to available      genomes. To set up these two components of taxomias we will use the ``` setup_taxomias.py ``` script and call it as follows:
+4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiiers to available      genomes. To set up these two components of TAXOMIAS we will use the ``` setup_taxomias.py ``` script and call it as follows:
 __NOTE:__ Again, the import takes a bit of time.
 
   ``` shell
@@ -228,11 +228,11 @@ records = (r for r in SeqIO.parse(input_file, "fasta") if r.id.split("|")[3] in 
 count = SeqIO.write(records, output_file, "fasta")
 print "Saved %i records from %s to %s" % (count, input_file, output_file)
 
-# that's it, again only few lines of code are needed
+# That's it, again only few lines of code are needed
 ```
 
   
 ## Credits
-The original idea was conceptualized by Sixing Huang (DSMZ, Braunschweig) and most of the original code was written by him. In the beginning of 2016 NCBI decided to phase out GI numbers. I used to Sixing's code a lot and decided to modify it to make it work with NCBI's new system of taxonomy mappings based on accession version numbers.
+The original code was written by Sixing Huang (DSMZ, Braunschweig, Germany) and published on his blog (http://dgg32.blogspot.de/). In the beginning of 2016 NCBI decided to phase out GI numbers. I used to Sixing's code a lot and decided to modify it to make it work with NCBI's new system of taxonomy mappings based on accession version numbers.
 
 In addition I added functions to easily access refseq genomes based on taxonomic information.
