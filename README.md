@@ -16,7 +16,7 @@ in NCBI comes in quite handy in many situations (see usage scenarios).
 The idea behind TAXOMIAS is to locally setup a tailored NCBI taxonomy database
 in form of an sqlite database and to provide wrappers to use taxonomic information
 to access sequence information. Currently taxomias comprises functions to access
-three NCBI resources:
+two NCBI resources:
 
 1. RefSeq genomes
   * mapping of taxonomic identifiiers to available refseq genomes
@@ -38,11 +38,13 @@ three NCBI resources:
 
   Pre-requisites:
   * approx. __25 GB__ of disk space (preferentially on a fast drive)
-  * needed python package: __sqlite3__ 
+  * the sqlite3 command-line tool 
+  * optional python packages: __biopython__ (primarily needed to execute exemplary code)
   
   Python packages are installed easily using ```pip```. Under Debian-based (e.g. Ubuntu, Debian, Mint) and Red Hat-based (e.g. Red Hat, Centos) systems, ``` pip ``` is availbale from public repositories: ```apt-get install python-pip ``` (Debian-based systems) ``` yum -y install python-pip ``` (Red Hat-based systems).
 
-  Install sqlite3 (pip): ```pip install sqlite3```
+  The sqlite3 command line tool is shipped with many Linux distributions by default. If necessary it can be installed from respective package repositories (e.g. Debian-based systems):
+  ``` apt-get install sqlite3 ``` 
   
 
 2. Resources needed from NCBI:
@@ -74,8 +76,8 @@ three NCBI resources:
   within this object, we have imported the protein sequence to accession version number mappings into acc_taxid and we created
   indices to improve the performance of the sqlite3 database.
 
-4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiiers to available      genomes. To set up this two components of taxomias we will use the ``` setup_taxomias.py ``` and call it as follows:
-__NOTE:__ The import of the remaning resources takes again a while.
+4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiiers to available      genomes. To set up these two components of taxomias we will use the ``` setup_taxomias.py ``` and call it as follows:
+__NOTE:__ Again, the import takes a bit of time.
 
   ``` shell
   python setup_taxomias.py names.dmp nodes.dmp assembly_summary_refseq.txt ncbi_taxonomy.db
@@ -91,10 +93,88 @@ __NOTE:__ The import of the remaning resources takes again a while.
   The prompt will return 33075, which is the unique taxonomic identifiier for _Acidobacterium capsulatum_. Taxomias contains a bunch of functions which allows us to easily access our locally stored taxonomy database and to process taxonomic information with respect to setup cross references, see __Implemented functions__ and __Examples__ for details.
   
 ## Implemented functions
+  
+  Before we start with having a look at implemented functions we want to tell ``` python ``` where taxomias can be found. In order to do so we create a symbolic link:
+  
+  ``` shell
+  ln -s /your/path/to/taxomias /usr/lib/python2.7/
+  ```
+  
+  Any path listed in your ``` $PYTHONPATH ``` will do the trick.
+
+### Functions
+  
+  * taxomias.TaxidByName(taxid)
+    
+    e.g. ``` taxomias.TaxidByName("Acidobacterium capsulatum") ```
+    --> the function will return if possible the respective taxonomic identifiier, otherwise it returns "-1"
+
+  * taxomias.RankByTaxid(taxid)
+    
+    e.g. ``` taxomias.RankByTaxid(33075) ```
+    --> the function will return if possible the corresponding rank for instance "genus" or "species", otherwise it returns "no rank"
+  
+  * taxomias.RankByName("name")
+    
+    e.g. ``` taxomias.RankByName("Acidobacterium capsulatum") ```
+    --> the function will return if possible the corresponding rank for instance "genus" or "species", otherwise it returns "no rank"
+  
+  * taxomias.NameByTaxid(taxid)
+    
+    e.g. ``` taxomias.NameByTaxid(33075) ```
+    --> returns the name for any valid taxonomic identifiier
+
+  * taxomias.ParentByTaxid(taxid)
+    
+    e.g. ``` taxomias.ParentByTaxid(33075) ```
+    --> the function will return the parent of the respective taxonomic group, otherwise it returns "-1"
+
+  * taxomias.ParentByName("name")
+    
+    e.g. ``` taxomias.ParentByName("Acidobacterium capsulatum") ```
+    --> --> the function will return the parent of the respective taxonomic group, otherwise it returns "-1"
+
+  * taxomias.PathByTaxid(taxid)
+    
+    e.g. ``` taxomias.PathyByTaxid(33075) ```
+    --> given a taxonomic identifiier the whole taxonomic path is resolved if possible, otherwise it returns "-1"
+
+  * taxomias.TaxidByAcc(acc.version.number)
+    
+    e.g. ``` taxomias.TaxidByAcc(AAK58570.1) ```
+    --> the function will return if possible the respective taxonomic identifiier, otherwise it returns "-1"
+
+  * taxomias.SonsByTaxid(taxid)
+    
+    e.g. ``` taxomias.SonsByTaxid(33075) ```
+    --> the function will look up all sons of a taxonomic group if possible, otherwise it returns "-1"
+
+  * taxomias.AccByTaxid(taxid)
+    
+    e.g. ``` taxomias.AccByTaxid(33075) ```
+    --> looks up all deposited accession version numbers for a given taxonomic identifiier, otherwise it returns "-1"
+
+  * taxomias.AllSonsByTaxid(taxid)
+    
+    e.g. ``` taxomias.AllSonsByTaxid(33075) ```
+    --> the function will look up all sons of a taxonomic group if possible, otherwise it returns "-1" __NOTE:__ supports multithreading (default: 4 threads will be used)
+
+  * taxomias.AllAccByTaxid(taxid)
+    
+    e.g. ``` taxomias.AllAccByTaxid(33075) ```
+    --> looks up all deposited accession version numbers for a given taxonomic identifiier, otherwise it returns "-1" __NOTE:__ supports multithreading (default: 4 threads will be used)
+
+  * taxomias.GenomeByTaxid(taxid, seq_type)
+    
+    e.g. ``` taxomias.GenomeByTaxid(240015, "nucl") ```
+    --> the function will download the corresponding genome for a given identifiier, dependent on whether nucleotide "nucl" or protein "prot" sequences have been specified, either nucleotide or protein sequences of coding genes of the respective genome are downloaded into a new directory named after the given taxonomic identifiier
+
+  * taxomias.AllGenomesByTaxid(taxid, seq_type)
+    
+    e.g. ``` taxomias.AllGenomesByTaxid(33075, "prot") ```
+    --> the function will download all genomes of given taxonomic group (e.g. a family or order) using the function ```taxomias.GenomeByTaxid``
 
   
-  
-	
 ## Credits
 The original idea was conceptualized by Sixing Huang (DSMZ, Braunschweig) and most of the original code was written by him. However, NCBI is phasing out GI numbers as identifiiers and links to taxonomic information. 
 
