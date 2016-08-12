@@ -1,4 +1,4 @@
-![Taxomias](https://github.com/wegnerce/taxomias/blob/master/logo_taxomias.png)
+![Taxomias](https://github.com/wegnerce/taxomias/blob/master/logo_taxomias.png = 250x213)
 
 # taxomias                                                                     
 TAXOMIAS v0.1 August, '16
