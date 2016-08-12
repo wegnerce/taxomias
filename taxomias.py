@@ -17,24 +17,15 @@ TAXOMIAS v0.1 August, '16
 
               carl-eric.wegner@uni-jena.de
 
-The idea behind TAXOMIAS is to locally setup a tailored NCBI taxonomy database
- and to provide wrappers to utilize this database for common tasks such as:
-	
-	- creation of custom BLAST databases (e.g. all bacterial proteins)
-	- downloading of genomes of interests (e.g. all available phage genomes)
-	- etc...
-
-The original idea was conceptualized by Sixing Huang (DSMZ, Braunschweig). However,
-NCBI is phasing out GI numbers as identifiiers and links to taxonomic information. 
-
-Therefore the original code was rewritten by me to work with the newly established 
-system of using accession (version) numbers as replacement.
+**** SEE README.md for details
 
 """
-
+#needed modules
 import os, sqlite3
 
+#path to local NCBI taxonomy database
 db = "ncbi_taxonomy.db"
+#default return values if no results are found
 unknown = -1
 no_rank = "no rank"
 
