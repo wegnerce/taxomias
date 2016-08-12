@@ -13,15 +13,15 @@ NCBI maintains a well-curated, hierarchical database of known taxonomy. Having
 a local copy of this database in combination with mappings to sequence data deposited
 in NCBI comes in quite handy in many situations (see usage scenarios).
 
-Taxomias is a small module written in python.The idea behind TAXOMIAS is to locally 
+TAXOMIAS is a small module written in python (python 2.7).The idea behind TAXOMIAS is to locally 
 setup a tailored NCBI taxonomy database in form of an sqlite database and to provide 
-wrappers to use taxonomic information to access sequence information. Currently taxomias 
+wrappers to use taxonomic information to access sequence information. Currently TAXOMIAS 
 comprises functions to access two NCBI resources:
 
 1. RefSeq genomes
-  * mapping of taxonomic identifiiers to available refseq genomes
+  * mapping of taxonomic identifiers to available refseq genomes
 2. NCBI nr 
-  * mapping of taxonomic identifiiers to accession version numbers of protein sequences deposited in NCBI nr
+  * mapping of taxonomic identifiers to accession version numbers of protein sequences deposited in NCBI nr
 
 ## Usage scenarios
 
@@ -56,9 +56,9 @@ comprises functions to access two NCBI resources:
   * ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.gz
   * ftp://ftp.ncbi.nih.gov/genomes/ASSEMBLY_REPORTS/assembly_summary_refseq.txt
 
-  taxdmp.zip contains a bunch of files, we only need two of them: __paths.dmp__ and __nodes.dmp__, which hold the whole NCBI taxonomy. __prot.accession2taxid.gz__ includes accession version number mappings for all protein sequences deposited in NCBI nr, and __assembly_summary_refseq.txt__ is a list of all deposited and annotated genomes in NCBI including respective taxonomic identifiiers.
+  taxdmp.zip contains a bunch of files, we only need two of them: __paths.dmp__ and __nodes.dmp__, which hold the whole NCBI taxonomy. __prot.accession2taxid.gz__ includes accession version number mappings for all protein sequences deposited in NCBI nr, and __assembly_summary_refseq.txt__ is a list of all deposited and annotated genomes in NCBI refseq including respective taxonomic identifiers.
 
-3. The heart of taxomias will be a cross-mapped NCBI taxonomy database stored in a sqlite3 database.
+3. The heart of TAXOMIAS will be a cross-mapped NCBI taxonomy database stored in a sqlite3 database.
    To setup our database execute the following commands on the command-line. Taxomias expects the NCBI taxonomy to be in the same directory.
    __NOTE:__ The import of the accession version number mappings takes a while - be patient.
 
@@ -76,7 +76,7 @@ comprises functions to access two NCBI resources:
   within this object, we have imported the protein sequence to accession version number mappings into acc_taxid and we created
   indices to improve the performance of the sqlite3 database.
 
-4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiiers to available      genomes. To set up these two components of taxomias we will use the ``` setup_taxomias.py ``` script and call it as follows:
+4. What is still missing is the underlying NCBI taxonomy database and the mapping of taxonomic identifiers to available      genomes. To set up these two components of TAXOMIAS we will use the ``` setup_taxomias.py ``` script and call it as follows:
 __NOTE:__ Again, the import takes a bit of time.
 
   ``` shell
@@ -90,24 +90,24 @@ __NOTE:__ Again, the import takes a bit of time.
   .exit
   ```
   
-  The prompt will return 33075, which is the unique taxonomic identifiier for _Acidobacterium capsulatum_. Taxomias contains a bunch of functions which allows us to easily access our locally stored taxonomy database and to process taxonomic information with respect to setup cross references, see __Implemented functions__ and __Examples__ for details.
+  With the first command we connect to our local NCBI taxonomy database (make sure that you indicate the right path). The second command searched the table __tree__ for _Acidobacterium capsulatum_ and returns it taxonomic identifier. The prompt will return 33075, which is the unique identifiier for _Acidobacterium capsulatum_. TAXOMIAS contains a bunch of functions which allows us to easily access our locally stored taxonomy database and to process taxonomic information with respect to setup cross references, see __Implemented functions__ and __Examples__ for details.
   
 ## Implemented functions
   
-  Before we start with having a look at implemented functions we want to tell ``` python ``` where taxomias can be found. In order to do so we create a symbolic link:
+  Before we start with having a look at implemented functions we want to tell ``` python ``` where taxomias can be found. In order to do so we create a symbolic link of the folder containing taxomias.py to a location known to your ```$PYTHONPATH``` variable:
   
   ``` shell
   ln -s /your/path/to/taxomias /usr/lib/python2.7/
   ```
   
-  Any path listed in your ``` $PYTHONPATH ``` will do the trick.
+  Any path listed in your ``` $PYTHONPATH ``` (/usr/lib/python2.7/ is only one example) will do the trick.
 
 ### Functions
   
   * taxomias.TaxidByName(taxid)
     
     e.g. ``` taxomias.TaxidByName("Acidobacterium capsulatum") ```
-    --> the function will return if possible the respective taxonomic identifiier, otherwise it returns "-1"
+    --> the function will return if possible the respective taxonomic identifier, otherwise it returns "-1"
 
   * taxomias.RankByTaxid(taxid)
     
@@ -122,7 +122,7 @@ __NOTE:__ Again, the import takes a bit of time.
   * taxomias.NameByTaxid(taxid)
     
     e.g. ``` taxomias.NameByTaxid(33075) ```
-    --> returns the name for any valid taxonomic identifiier
+    --> returns the name for any valid taxonomic identifier
 
   * taxomias.ParentByTaxid(taxid)
     
@@ -142,7 +142,7 @@ __NOTE:__ Again, the import takes a bit of time.
   * taxomias.TaxidByAcc(acc.version.number)
     
     e.g. ``` taxomias.TaxidByAcc(AAK58570.1) ```
-    --> the function will return if possible the respective taxonomic identifiier, otherwise it returns "-1"
+    --> the function will return if possible the respective taxonomic identifier, otherwise it returns "-1"
 
   * taxomias.SonsByTaxid(taxid)
     
@@ -152,7 +152,7 @@ __NOTE:__ Again, the import takes a bit of time.
   * taxomias.AccByTaxid(taxid)
     
     e.g. ``` taxomias.AccByTaxid(33075) ```
-    --> looks up all deposited accession version numbers for a given taxonomic identifiier, otherwise it returns "-1"
+    --> looks up all deposited accession version numbers for a given taxonomic identifier, otherwise it returns "-1"
 
   * taxomias.AllSonsByTaxid(taxid)
     
@@ -162,12 +162,12 @@ __NOTE:__ Again, the import takes a bit of time.
   * taxomias.AllAccByTaxid(taxid)
     
     e.g. ``` taxomias.AllAccByTaxid(33075) ```
-    --> looks up all deposited accession version numbers for a given taxonomic identifiier, otherwise it returns "-1" __NOTE:__ supports multithreading (default: 4 threads will be used)
+    --> looks up all deposited accession version numbers for a given taxonomic identifier, otherwise it returns "-1" __NOTE:__ supports multithreading (default: 4 threads will be used)
 
   * taxomias.GenomeByTaxid(taxid, seq_type)
     
     e.g. ``` taxomias.GenomeByTaxid(240015, "nucl") ```
-    --> the function will download the corresponding genome for a given identifiier, dependent on whether nucleotide "nucl" or protein "prot" sequences have been specified, either nucleotide or protein sequences of coding genes of the respective genome are downloaded into a new directory named after the given taxonomic identifiier
+    --> the function will download the corresponding genome for a given identifier, dependent on whether nucleotide "nucl" or protein "prot" sequences have been specified, either nucleotide or protein sequences of coding genes of the respective genome are downloaded into a new directory named after the given taxonomic identifier
 
   * taxomias.AllGenomesByTaxid(taxid, seq_type)
     
@@ -179,21 +179,21 @@ __NOTE:__ Again, the import takes a bit of time.
 ### Example (1) - Collecting and downloading all Verrucomicrobia genomes
 
 ``` python
-# needed modules
+# Import needed modules
 import sqlite3, taxmomias
 
 # Whats the taxonomic idnetifiier of Verrucomicrobia?
 print taxomias.TaxidByName("Verrucomicrobia")
 
 # Ah, apparently its 74201, so lets collect all the genomes (protein sequences)
-taxomias.AllGenomesByTaxid(74201)
+taxomias.AllGenomesByTaxid(74201, "prot")
 
 # That's it, we just collected all available Verrucomicrobia genomes, with three lines of code... ;-)
 ```
 
 ### Example (2) - Filter NCBI nr for archaeal proteins
 
-1. First we need to grab the latest NCBI nr database as .fasta. Download the file and unpack it
+1. First we need to grab the latest NCBI nr database as .fasta. Download the corresponding file and unpack it
 
 ``` shell
 wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/nr.gz 
@@ -201,7 +201,7 @@ gzip -d nr.gz
 ```
 
 ``` python
-# needed modules
+# Import needed modules
 import sqlite3, taxomias
 from Bio import SeqIO
 
@@ -209,16 +209,16 @@ from Bio import SeqIO
 input_file = "nr.fasta"
 output_file = "nr_archaea.fasta"
 
-# what is the taxonomic identifiier for archaea? it's 2157!
+# What is the taxonomic identifiier for archaea? it's 2157!
 print taxomias.TaxidByName("Archaea")
 
-# write all accession version numbers belonging to archaea into a set,
+# Write all accession version numbers belonging to archaea into a set,
 # sets are faster than lists due to the use of hash tables as underlying
 # data structure
 wanted = set(taxomias.AllAccByTaxid(2157))
 
-# filter NCBI nr using the set of archaea accession version numbers
-# for the filtering the fasta file is read and the ID's of every entry are checked
+# Filter NCBI nr using the set of archaea accession version numbers
+# for the filtering the fasta file is read and the ID of every entry is checked
 # for archaeal accessions, every entry looks roughly as follows:
 # >gi|2340931|emb|CAA74950.1| hypothetical protein [Methanosarcina mazei]
 # MQAFYNLNISHVHVPDKDFNRSTFYSIIGAEFFADPAAFAFKQVYLVRDAVFLADCFMWA
@@ -228,12 +228,11 @@ records = (r for r in SeqIO.parse(input_file, "fasta") if r.id.split("|")[3] in 
 count = SeqIO.write(records, output_file, "fasta")
 print "Saved %i records from %s to %s" % (count, input_file, output_file)
 
-# that's it, again only few lines of code are needed
+# That's it, again only few lines of code are needed
 ```
 
   
 ## Credits
-The original idea was conceptualized by Sixing Huang (DSMZ, Braunschweig) and most of the original code was written by him. However, NCBI is phasing out GI numbers as identifiiers and links to taxonomic information. 
+The original code was written by Sixing Huang (DSMZ, Braunschweig, Germany) and published on his blog (http://dgg32.blogspot.de/) in 2013. In the beginning of 2016 NCBI decided to phase out GI numbers. I used Sixing's code a lot and decided to modify it to make it work with NCBI's new system of taxonomy mappings based on accession version numbers.
 
-Therefore the original code was rewritten by me to work with the newly established system of using accession (version) numbers as replacement for GI numbers.
-
+In addition I added functions to easily access refseq genomes based on taxonomic information.
