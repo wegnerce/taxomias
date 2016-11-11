@@ -69,6 +69,7 @@ comprises functions to access two NCBI resources:
   create table acc_taxid (accession text, accession_version text, taxid integer, gi integer);
   .tables
   .mode list
+  .separator \t
   .import prot.accession2taxid acc_taxid 
   CREATE UNIQUE INDEX accvers_idx_on_accvers_taxid ON acc_taxid(accession_version);
   CREATE INDEX taxid_idx_on_accvers_taxid ON acc_taxid(taxid);
