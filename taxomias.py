@@ -17,15 +17,35 @@ TAXOMIAS v0.1 August, '16
 
               carl-eric.wegner@uni-jena.de
 
-**** SEE README.md for details
+The idea behind TAXOMIAS is to locally setup a tailored NCBI taxonomy database
+ and to provide wrappers to utilize this database for common tasks such as:
+	
+	- creation of custom BLAST databases (e.g. all bacterial proteins)
+	- downloading of genomes of interests (e.g. all available phage genomes)
+	- etc...
+
+The original idea was conceptualized by Sixing Huang (DSMZ, Braunschweig). However,
+NCBI is phasing out GI numbers as identifiiers and links to taxonomic information. 
+
+Therefore the original code was rewritten by me to work with the newly established 
+system of using accession (version) numbers as replacement.
+
+**** Revision History:
+
+v0.2 (June '17)
+- bug fix, modification of the routines to retrieve genome data
+  revised routines:
+		o taxomias.GenomeByTaxid
+		o taxomias.AllGenomesByTaxid
+
+v0.1 (August '16)
+- initial release
 
 """
-#needed modules
+
 import os, sqlite3
 
-#path to local NCBI taxonomy database
-db = "ncbi_taxonomy.db"
-#default return values if no results are found
+db = "/path/to/ncbi_taxonomy.db"
 unknown = -1
 no_rank = "no rank"
 
@@ -208,6 +228,7 @@ def GenomeByTaxid(taxid, seqs):
     command = "SELECT path FROM genomes WHERE taxid = '" + str(taxid) +  "';"
     cursor.execute(command)    
     result = cursor.fetchone()
+    print result
     cursor.close()
     if result and seqs == "nucl":
         cmd = "wget --user=anonymous --password=carl-eric.wegner@uni-jena.de --directory-prefix "+str(taxid)+" "+"'"+result[0]+"/*.fna.gz"+"'"
@@ -216,7 +237,7 @@ def GenomeByTaxid(taxid, seqs):
     elif result and seqs == "prot":
         cmd = "wget --user=anonymous --password=carl-eric.wegner@uni-jena.de --directory-prefix "+str(taxid)+" "+"'"+result[0]+"/*.faa.gz"+"'"
         os.system(cmd)
-        return "Genome (protein sequences) downloaded for " + str(taxid) + "."
+        return "Genome (protein sequences) downloaded for " + str(taxid) + "."   
     else:
         return unknown
 

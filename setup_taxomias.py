@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 """
 _________ _______           _______  _______ _________ _______  _______ 
 \__   __/(  ___  )|\     /|(  ___  )(       )\__   __/(  ___  )(  ____ \
@@ -9,7 +9,7 @@ _________ _______           _______  _______ _________ _______  _______
    | |   | )   ( |( /   \ )| (___) || )   ( |___) (___| )   ( |/\____) |
    )_(   |/     \||/     \|(_______)|/     \|\_______/|/     \|\_______)
                                                                         
-TAXOMIAS v0.1 August, '16
+TAXOMIAS v0.2 August, '17
 
 @author:      Carl-Eric Wegner
 @affiliation: Küsel Lab - Aquatic Geomicrobiology
@@ -22,6 +22,15 @@ databases, as well as a mapping of taxonomic identifiers to available annotated
 genomes.
 
 **** SEE README.md for details
+
+**** Revision History:
+
+v0.2 (June '17)
+- bug fix, revision of the setup procedure for genome path
+  to taxid mappings
+
+v0.1 (August '16)
+- initial release
 
 """
 # needed modules
@@ -56,23 +65,24 @@ for line in input_nodes:
         tree.get(taxid)[2] = rank        
 input_nodes.close()
 
-#process genomes accessory table, path to genomes accessory table
+#process genomes accessory table
 for line in open(sys.argv[3], "r"):
-	fields = line.strip().split("\t")
-	taxid = fields[0]
-	path = fields[1]
-	tax_genomes[taxid] = path
+	if not line.startswith("#"):
+		fields = line.strip().split("\t")
+		taxid = fields[5]
+		path = fields[19]
+		tax_genomes[taxid] = path
 
 #link to setup database
 conn = sqlite3.connect(sys.argv[4])
 cursor = conn.cursor()
-cursor.execute("CREATE TABLE tree (taxid integer, name text, parent integer, rank text);") # create table harboring
+#cursor.execute("CREATE TABLE tree (taxid integer, name text, parent integer, rank text);") # create table harboring
 
 for taxid in tree.keys():
     command = "INSERT INTO tree VALUES ('" + taxid + "', '" + tree[taxid][0].replace("'","''") + "', '" + tree[taxid][1] + "','" + tree[taxid][2] +"');"
     cursor.execute(command)    
 
-cursor.execute("CREATE TABLE genomes (taxid integer, path text);") # create table containing taxid genome path pairs
+#cursor.execute("CREATE TABLE genomes (taxid integer, path text);") # create table containing taxid genome path pairs
 
 for taxid in tax_genomes.keys():
 	command = "INSERT INTO genomes VALUES ('" + taxid + "', '" + tax_genomes[taxid] + "');"
