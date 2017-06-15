@@ -14,8 +14,8 @@ TAXOMIAS v0.2 June, '17
 v0.2 (June '17)
 - bug fix, modification of the routines to retrieve genome data
   revised routines:
-		o taxomias.GenomeByTaxid
-		o taxomias.AllGenomesByTaxid
+  * taxomias.GenomeByTaxid
+  * taxomias.AllGenomesByTaxid
 - bug fix, revision of the setup procedure for genome path
   to taxid mappings
 
