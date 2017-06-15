@@ -1,13 +1,26 @@
 <img src="https://github.com/wegnerce/taxomias/blob/master/logo_taxomias.png" width="250">
 
 # taxomias                                                                     
-TAXOMIAS v0.1 August, '16
+TAXOMIAS v0.2 June, '17
 
 
 * Carl-Eric Wegner
 * Küsel Lab - Aquatic Geomicrobiology
 * Friedrich Schiller University of Jena
 * carl-eric.wegner(at)uni-jena.de
+
+## Revision history
+
+v0.2 (June '17)
+- bug fix, modification of the routines to retrieve genome data
+  revised routines:
+		o taxomias.GenomeByTaxid
+		o taxomias.AllGenomesByTaxid
+- bug fix, revision of the setup procedure for genome path
+  to taxid mappings
+
+v0.1 (August '16)
+- initial release
 
 ## Background
 
